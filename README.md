@@ -9,6 +9,7 @@
 | 3 輪系齒數比 | 真實齒數的五個輪依真實轉速比轉動，可切換 1×／60×／3600×；點一組嚙合查看齒數比 |
 | 4 擒縱的四個階段 | 按鎖定／解鎖／衝擊／落下，零件以動畫轉到該階段，標出接觸點和能量去向 |
 
+- 線上版：https://sean0331-1.github.io/watch-explainer/
 - 網站：單一 [`index.html`](index.html)，不使用任何 JavaScript 函式庫，直接用瀏覽器打開即可
 - 規格書：[`SPEC.md`](SPEC.md)
 - 修改紀錄：[`CHANGELOG.md`](CHANGELOG.md)
