@@ -1,0 +1,1357 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>機械錶怎麼走：一頁互動圖解</title>
+<meta name="description" content="以開源瑞士機芯 OM10 為例，用四張可操作的圖解說明機械錶的能量路徑：錶冠三段、上鍊與動力儲存、輪系齒數比、擒縱的四個階段。">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23d6b878' stroke-width='2.5'/%3E%3Cpath d='M16 16V8.5M16 16l5 3' stroke='%23d6b878' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* 色票沿用原專案視覺手冊（修訂 7：純黑背景） */
+  --bg: #000000;
+  --ink-0: #0d0c0b;
+  --ink-2: #13110f;
+  --line: #29251f;
+  --line-2: #3b352c;
+  --faint: #756d60;
+  --muted: #a8a091;
+  --cream: #e9e3d6;
+  --gold-2: #b89b64;
+  --gold: #d6b878;
+  --ruby: #c23b52;          /* 只用在寶石：叉瓦、衝擊釘 */
+  --serif: 'Noto Serif TC', 'Songti TC', serif;
+  --sans: 'Noto Sans TC', system-ui, -apple-system, 'Microsoft JhengHei', sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 60px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--cream);
+  font: 16px/1.8 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: var(--gold-2); text-underline-offset: 3px; }
+a:hover { color: var(--gold); }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+/* 開頭 */
+.hero { padding: 96px 0 56px; }
+.eyebrow, .ch-no {
+  margin: 0;
+  font: 500 12px/1 var(--sans);
+  letter-spacing: .24em;
+  color: var(--gold-2);
+}
+h1 {
+  margin: 18px 0 20px;
+  font: 700 clamp(38px, 7vw, 68px)/1.15 var(--serif);
+  letter-spacing: .02em;
+}
+.hero .sub { max-width: 38em; margin: 0; font-size: 18px; color: var(--cream); }
+.hero .note { max-width: 42em; margin: 14px 0 0; color: var(--muted); font-size: 15px; }
+
+/* 能量路徑（固定在頂部） */
+nav.path {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(0, 0, 0, .9);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+nav.path ol {
+  display: flex; align-items: center;
+  margin: 0; padding: 8px 0; list-style: none;
+  overflow-x: auto; scrollbar-width: none;
+}
+nav.path ol::-webkit-scrollbar { display: none; }
+nav.path li { display: flex; align-items: center; flex: none; }
+nav.path li + li::before {
+  content: ''; width: clamp(10px, 4vw, 48px); height: 1px; margin: 0 4px;
+  background: var(--line-2); transition: background .3s;
+}
+nav.path li.lit::before { background: var(--gold-2); }
+nav.path a {
+  display: block; padding: 6px 8px; border-radius: 2px;
+  color: var(--faint); font-size: 14px; text-decoration: none; white-space: nowrap;
+  transition: color .3s;
+}
+nav.path li.lit a { color: var(--muted); }
+nav.path a.on { color: var(--gold); }
+nav.path .dot { display: inline-block; width: 6px; height: 6px; margin-right: 7px; border-radius: 50%; background: currentColor; vertical-align: 2px; }
+
+/* 章節 */
+.chapter { padding: 80px 0 72px; border-top: 1px solid var(--line); }
+.ch-head { max-width: 46em; }
+h2 { margin: 14px 0 18px; font: 700 clamp(28px, 4vw, 40px)/1.3 var(--serif); }
+.lead { margin: 0; font-size: 18px; }
+.ch-body {
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 44px; align-items: start; margin-top: 40px;
+}
+.stage {
+  position: sticky; top: 68px; margin: 0;
+  background: var(--ink-0); border: 1px solid var(--line); border-radius: 4px;
+  padding: 14px 14px 12px;
+}
+.stage svg { display: block; width: 100%; height: auto; overflow: hidden; }
+.stage figcaption { margin-top: 10px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.stage figcaption .legend { display: block; color: var(--faint); }
+.side > * + * { margin-top: 18px; }
+
+/* 控制項 */
+.ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ctrl-label { width: 100%; color: var(--faint); font-size: 13px; letter-spacing: .08em; }
+button {
+  min-height: 40px; padding: 8px 14px;
+  font: 500 14px/1.2 var(--sans); color: var(--cream);
+  background: var(--ink-2); border: 1px solid var(--line-2); border-radius: 2px;
+  cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: manipulation;
+  transition: border-color .2s, color .2s, background .2s;
+}
+button:hover { border-color: var(--gold-2); }
+button[aria-pressed="true"], button.held {
+  color: var(--gold); border-color: var(--gold); background: rgba(214, 184, 120, .08);
+}
+button.hold { touch-action: none; }
+.hint { margin: 0; color: var(--faint); font-size: 13px; }
+
+/* 讀數 */
+.readout {
+  display: grid; grid-template-columns: auto 1fr; gap: 6px 18px;
+  margin: 0; padding: 14px 16px;
+  background: var(--ink-0); border: 1px solid var(--line); border-radius: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.readout dt { color: var(--faint); font-size: 14px; }
+.readout dd { margin: 0; }
+.status {
+  margin: 0; padding: 10px 14px; min-height: 3.4em;
+  border-left: 2px solid var(--gold-2); background: rgba(214, 184, 120, .05);
+  color: var(--cream); font-size: 15px;
+}
+.dial-row { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px; align-items: center; }
+.dial-row svg { width: 112px; height: 112px; display: block; }
+
+/* 動力儲存表 */
+.gauge { position: relative; height: 10px; margin: 26px 0 30px; background: var(--ink-2); border: 1px solid var(--line-2); border-radius: 1px; }
+.gauge .fill { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(90deg, var(--gold-2), var(--gold)); }
+.gauge .mark { position: absolute; top: -6px; bottom: -6px; width: 1px; background: var(--faint); }
+.gauge .mark span { position: absolute; top: 18px; transform: translateX(-50%); color: var(--faint); font-size: 12px; white-space: nowrap; }
+.gauge .mark.web { background: var(--muted); }
+.gauge .mark.web span { top: -22px; color: var(--muted); }
+.gauge .mark.end span { transform: translateX(-100%); }
+
+/* 文字 */
+.prose h3 { margin: 30px 0 8px; font: 700 18px/1.5 var(--serif); color: var(--cream); }
+.prose p { margin: 0 0 12px; }
+.prose .src, .note { color: var(--muted); font-size: 14px; }
+b.term { color: var(--gold); font-weight: 500; }
+.phase-card { padding: 16px 18px; background: var(--ink-0); border: 1px solid var(--line); border-radius: 2px; }
+.phase-card h3 { margin: 0 0 6px; font: 700 20px/1.4 var(--serif); color: var(--gold); }
+.phase-card p { margin: 0; }
+.mesh-info { margin: 0; padding: 12px 14px; background: var(--ink-0); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.mesh-info strong { color: var(--gold); font-weight: 500; }
+.table-wrap { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; }
+table.data th, table.data td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+table.data th { color: var(--faint); font-weight: 500; font-size: 13px; }
+.figures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 0; background: var(--line); border: 1px solid var(--line); }
+.figures div { padding: 12px 14px; background: var(--bg); }
+.figures dt { font: 600 20px/1.3 var(--serif); color: var(--gold); }
+.figures dd { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+.keypoints { margin-top: 48px; padding: 20px 24px; background: var(--ink-0); border-left: 2px solid var(--gold-2); }
+.keypoints h3 { margin: 0 0 8px; font: 700 17px/1.5 var(--serif); }
+.keypoints ul { margin: 0; padding-left: 1.2em; }
+.keypoints li + li { margin-top: 4px; }
+
+/* SVG 零件 */
+svg * { vector-effect: non-scaling-stroke; }
+svg text { font-family: var(--sans); vector-effect: none; }
+.wheel .body, .wheel .spoke, .wheel .hub { fill: #231f17; stroke: var(--gold-2); stroke-width: 1; }
+.steel .body, .steel .spoke, .steel .hub { fill: #1d1b18; stroke: var(--muted); stroke-width: 1; }
+.on .body, .on .spoke, .on .hub { fill: #3d3525; stroke: var(--gold); }
+.axle { fill: var(--bg); stroke: var(--muted); stroke-width: 1; }
+.knurl { stroke: var(--muted); stroke-width: 1; }
+.on .knurl { stroke: var(--gold); }
+.teeth-edge { fill: none; stroke: var(--muted); stroke-width: 1; }
+.on .teeth-edge { stroke: var(--gold); }
+.lever { fill: #1f1d1a; stroke: var(--muted); stroke-width: 1; }
+.plate { fill: rgba(168, 160, 145, .07); stroke: var(--line-2); stroke-width: 1; }
+.pivot { fill: var(--bg); stroke: var(--faint); stroke-width: 1; }
+.date-disc { fill: #1c1b19; stroke: var(--muted); stroke-width: 1; }
+.on.date-disc, .on .date-disc { fill: #3d3525; stroke: var(--gold); }
+.drum-floor { fill: #0a0908; stroke: var(--line-2); stroke-width: 1; }
+.spring { fill: none; stroke: #c9c3b6; stroke-width: 1.4; stroke-linejoin: round; }
+.slip-mark { fill: var(--gold); opacity: 0; transition: opacity .3s; }
+.slip-mark.show { opacity: 1; }
+.pitch { fill: none; stroke: var(--faint); stroke-width: 1; stroke-dasharray: 3 3; opacity: .7; }
+.pitch.on { stroke: var(--gold); opacity: 1; }
+.ruby { fill: var(--ruby); stroke: #e88a9a; stroke-width: .6; }
+.flow { fill: none; stroke: var(--gold); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transition: opacity .3s; }
+.flow.show { opacity: .9; }
+.contact { fill: none; stroke: var(--gold); stroke-width: 2; opacity: 0; transition: opacity .25s; }
+.contact.show { opacity: 1; animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+.marker circle { fill: var(--bg); stroke: var(--gold-2); stroke-width: 1; }
+.marker text { fill: var(--gold); font-size: 2.5px; font-weight: 500; text-anchor: middle; dominant-baseline: central; }
+.lbl { fill: var(--muted); font-size: .9px; text-anchor: middle; }
+.lbl .sub { fill: var(--faint); font-size: .72px; }
+.lbl.on { fill: var(--gold); }
+.lbl.on .sub { fill: var(--gold-2); }
+.hand-s { stroke: var(--cream); stroke-width: 1.6; stroke-linecap: round; }
+.hit { fill: transparent; cursor: grab; touch-action: none; }
+.hit:active { cursor: grabbing; }
+.mobile { cursor: pointer; }
+.dial-face { fill: var(--ink-2); stroke: var(--line-2); stroke-width: 1; }
+.tick { stroke: var(--faint); stroke-width: 1; }
+.tick.major { stroke: var(--muted); stroke-width: 1.5; }
+.datewin rect { fill: var(--cream); }
+.datewin text { fill: #1a1714; font-size: 3.4px; font-weight: 700; text-anchor: middle; dominant-baseline: central; font-variant-numeric: tabular-nums; }
+.hand { fill: var(--cream); }
+.hand.min { fill: var(--gold); }
+.dial-pin { fill: var(--gold); }
+
+/* 結尾 */
+footer { padding: 64px 0 80px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+footer h2 { font-size: 22px; color: var(--cream); }
+footer ul { padding-left: 1.2em; max-width: 52em; }
+footer li + li { margin-top: 6px; }
+
+@media (max-width: 820px) {
+  .ch-body { grid-template-columns: minmax(0, 1fr); gap: 24px; margin-top: 28px; }
+  .stage { position: static; padding: 8px 8px 10px; }
+  .chapter { padding: 56px 0 48px; }
+  .hero { padding: 64px 0 40px; }
+}
+@media (max-width: 600px) {
+  .wrap { padding: 0 16px; }
+  .marker text { font-size: 3.2px; }
+  .marker circle { r: 2.6px; }
+  .lbl { font-size: 1.15px; }
+  .lbl .sub { font-size: .9px; }
+  .figures { grid-template-columns: minmax(0, 1fr); }
+  .dial-row { grid-template-columns: 92px minmax(0, 1fr); }
+  .dial-row svg { width: 92px; height: 92px; }
+  .lead, .hero .sub { font-size: 17px; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">一頁互動圖解 · OM10 機芯</p>
+    <h1>機械錶怎麼走</h1>
+    <p class="sub">機械錶沒有電池。能量從錶冠進來，存在主發條裡，經過輪系加速，最後由擒縱機構一份一份交給擺輪。這一頁沿著這條路徑，用四張可以操作的圖說明每一段。</p>
+    <p class="note">以開源瑞士機芯 OM10 為例。數字取自 OM10 官方技術資料；由資料計算出的值標「推算」，表現原理、未依比例的圖標「示意」。</p>
+  </div>
+</header>
+
+<nav class="path" aria-label="能量路徑">
+  <div class="wrap">
+    <ol>
+      <li><a href="#crown" data-target="crown"><span class="dot"></span>錶冠</a></li>
+      <li><a href="#power" data-target="power"><span class="dot"></span>發條盒</a></li>
+      <li><a href="#train" data-target="train"><span class="dot"></span>輪系</a></li>
+      <li><a href="#escapement" data-target="escapement"><span class="dot"></span>擒縱</a></li>
+      <li><a href="#escapement" data-target="escapement" data-balance><span class="dot"></span>擺輪</a></li>
+    </ol>
+  </div>
+</nav>
+
+<main>
+<!-- ───────────── 第 1 章 錶冠三段 ───────────── -->
+<section class="chapter" id="crown" aria-labelledby="h-crown">
+  <div class="wrap">
+    <header class="ch-head">
+      <p class="ch-no">第 1 章</p>
+      <h2 id="h-crown">錶冠三段</h2>
+      <p class="lead">錶冠有三個段位：推到底的第 1 段上鍊，拉出一格的第 2 段調日期，拉到最外的第 3 段調時間。拉出錶冠時，一組槓桿改變齒輪的嚙合，讓同一支柄軸做三種工作。</p>
+    </header>
+    <div class="ch-body">
+      <figure class="stage">
+        <svg id="svg-crown" viewBox="4 2 116 70" role="img" aria-labelledby="cap-crown"></svg>
+        <figcaption id="cap-crown">上鍊撥針機構，面盤側示意圖，未依比例；柄軸與離合輪的移動量放大顯示。金色是目前互相咬合的零件。
+          <span class="legend">1 錶冠　2 柄軸　3 離合輪　4 立輪　5 小鋼輪　6 拉檔　7 離合桿　8 撥針輪　9 撥針滑架　10 中介輪與日期校正輪　11 日期盤（局部）　12 跨輪</span>
+        </figcaption>
+      </figure>
+      <div class="side">
+        <div class="ctrl" role="group" aria-label="錶冠段位">
+          <span class="ctrl-label">段位</span>
+          <button type="button" data-pos="1" aria-pressed="true">1　上鍊</button>
+          <button type="button" data-pos="2" aria-pressed="false">2　調日期</button>
+          <button type="button" data-pos="3" aria-pressed="false">3　調時間</button>
+        </div>
+        <div class="ctrl" role="group" aria-label="轉動錶冠">
+          <span class="ctrl-label">轉動錶冠（按住）</span>
+          <button type="button" class="hold" id="crown-fwd">順轉 ↻</button>
+          <button type="button" class="hold" id="crown-back">反轉 ↺</button>
+        </div>
+        <p class="hint">也可以直接拖曳圖中的錶冠：左右拉動切換段位，上下拖曳轉動。</p>
+        <div class="dial-row">
+          <svg id="dial" viewBox="-20 -20 40 40" aria-hidden="true"></svg>
+          <dl class="readout">
+            <dt>時間</dt><dd id="crown-time">上午 10:08</dd>
+            <dt>日期</dt><dd id="crown-date">30 日</dd>
+            <dt>動力儲存</dt><dd id="crown-reserve">—</dd>
+          </dl>
+        </div>
+        <p class="status" id="crown-status" aria-live="polite"></p>
+        <div class="prose">
+          <h3>構造</h3>
+          <p>柄軸上套著兩個齒輪：<b class="term">立輪</b>和<b class="term">離合輪</b>。離合輪套在柄軸的方形段上，跟著柄軸轉，但可以前後滑動；立輪套在圓形段上，只有在離合輪咬住它時才會轉。</p>
+          <p><b class="term">拉檔</b>的銷卡在柄軸的溝槽裡，拉出柄軸時拉檔跟著轉動，再推動<b class="term">離合桿</b>撥動離合輪。旁邊的<b class="term">撥針滑架</b>裝著撥針輪、中介輪和兩個校正輪。</p>
+          <h3>段位的切換</h3>
+          <p>拉出一格，離合輪離開立輪、改咬<b class="term">撥針輪</b>，經中介輪轉動三爪的日期校正輪。拉到第 3 段，撥針滑架再轉約 19°，讓時間校正輪咬住<b class="term">跨輪</b>，轉動指針。</p>
+          <p>第 1 段的<b class="term">端面齒</b>只在上鍊方向互相推動；反方向轉時，斜面把離合輪頂開少許，立輪不轉，錶冠可以自由回轉。</p>
+          <p class="src">每一段柄軸只移動約 0.45 mm，撥針滑架轉約 19°，兩者都由原專案依 OM10 的 CAD 幾何推算。撥針輪系齒數（12／15／20／20、跨輪 48／12、分輪 18、時輪 54）取自技術資料 p.2。日期校正的有效轉向未經官方資料確認，圖中的轉向為示意。</p>
+        </div>
+      </div>
+    </div>
+    <aside class="keypoints">
+      <h3>本章重點</h3>
+      <ul>
+        <li>錶冠三段：1 上鍊、2 調日期、3 調時間；拉檔、離合桿和撥針滑架改變齒輪的嚙合。</li>
+        <li>第 1 段離合輪以端面齒咬住立輪，只在上鍊方向傳動。</li>
+        <li>第 2 段經撥針輪、中介輪轉動三爪日期校正輪，錶冠每轉一圈日期約前進 1.8 天（推算）。</li>
+        <li>第 3 段撥針滑架轉向跨輪：錶冠轉 1.5 圈，分針轉一圈。</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<!-- ───────────── 第 2 章 上鍊與動力儲存 ───────────── -->
+<section class="chapter" id="power" aria-labelledby="h-power">
+  <div class="wrap">
+    <header class="ch-head">
+      <p class="ch-no">第 2 章</p>
+      <h2 id="h-power">上鍊與動力儲存</h2>
+      <p class="lead">機械錶運轉所需的能量，全部儲存在主發條中。上鍊把主發條捲緊，將機械功轉為彈性位能；主發條再以持續的扭力緩慢釋放，驅動整個機芯。</p>
+    </header>
+    <div class="ch-body">
+      <figure class="stage">
+        <svg id="svg-power" viewBox="0 4 112 50" role="img" aria-labelledby="cap-power"></svg>
+        <figcaption id="cap-power">左：發條盒（拿掉蓋子）。右：疊在發條盒上方的上鍊輪系；大鋼輪和發條軸是同一支軸。
+          <span class="legend">1 發條軸　2 主發條　3 發條盒（107 齒）　4 大鋼輪（63 齒）　5 小鋼輪（31 齒）　6 棘爪　7 立輪　8 錶冠</span>
+        </figcaption>
+      </figure>
+      <div class="side">
+        <div class="ctrl" role="group" aria-label="上鍊操作">
+          <span class="ctrl-label">操作</span>
+          <button type="button" class="hold" id="pw-wind">按住上鍊 ↻</button>
+          <button type="button" id="pw-back">反轉錶冠 ↺</button>
+          <button type="button" id="pw-fast" aria-pressed="false">快轉放鍊 3600×</button>
+          <button type="button" id="pw-reset">重設</button>
+        </div>
+        <p class="hint">也可以在圖中的錶冠上往上拖曳來上鍊。</p>
+        <div class="gauge" aria-hidden="true">
+          <div class="fill" id="pw-fill"></div>
+          <div class="mark" style="left:0"><span>0</span></div>
+          <div class="mark" style="left:30.4%"><span>24</span></div>
+          <div class="mark" style="left:60.9%"><span>48</span></div>
+          <div class="mark web" style="left:63.4%"><span>官網 50 h</span></div>
+          <div class="mark end" style="left:100%"><span>79 h</span></div>
+        </div>
+        <dl class="readout">
+          <dt>錶冠</dt><dd id="pw-crown">0 圈</dd>
+          <dt>發條軸</dt><dd id="pw-arbor">0 ／ 11.79 圈</dd>
+          <dt>動力儲存</dt><dd id="pw-reserve">0 小時</dd>
+        </dl>
+        <p class="status" id="pw-status" aria-live="polite"></p>
+        <div class="prose">
+          <h3>發條盒的構造</h3>
+          <p><b class="term">發條盒</b>是一個帶齒的圓筒，內部收著<b class="term">主發條</b>：一條又薄又長的彈簧鋼帶，捲成螺旋狀。主發條內端勾在中心的<b class="term">發條軸</b>上，外端貼著筒壁；筒外緣的 107 齒把能量輸出給輪系。</p>
+          <h3>上鍊的傳動路徑</h3>
+          <p>轉動錶冠時，扭力依序經過柄軸 → 立輪 → <b class="term">小鋼輪</b> → <b class="term">大鋼輪</b>。大鋼輪以方孔套在發條軸上，帶動發條軸，把主發條由內圈逐圈捲緊。錶冠每轉一圈，發條軸轉 16／63 圈。</p>
+          <h3>棘爪：防止逆轉</h3>
+          <p><b class="term">棘爪</b>是一支受彈簧壓迫的小槓桿，頂在小鋼輪的齒上。朝上鍊方向轉動時，齒面把棘爪推開而滑過；一旦反向，棘爪卡入齒間，阻止逆轉。因此已儲存的能量無法經由錶冠洩出，只能從發條盒輸出。</p>
+          <p class="note">原理與束線帶的單向齒相同：只能收緊，無法退回。</p>
+          <h3>能量輸出</h3>
+          <p>發條軸被棘爪鎖定後，主發條只能推動筒壁來釋放能量，使整個發條盒轉動，每小時 0.1495 圈。扭力並非完全恆定：上滿後運轉 0.5 小時為 9.08 N·mm，24 小時後降到 8.10 N·mm。</p>
+          <h3>打滑發條：防止過度上鍊</h3>
+          <p>自動錶在佩戴時持續上鍊，因此主發條外端不是固定在筒壁上，而是以摩擦力貼附。上滿後若繼續上鍊，外端便沿筒壁<b class="term">打滑</b>，釋放多餘的扭力，避免主發條過載斷裂。</p>
+          <p class="src">技術資料 p.2–3：發條軸上滿 11.79 圈、約轉錶冠 47 圈；理論動力儲存 79 小時（openmovement 網站標示至少 50 小時）。依齒數 16／63 推算，上滿需 46.4 圈。M0.50、M24 依 NIHS 慣例解讀為上滿後 0.5 與 24 小時的扭力。上鍊輪系齒數由原專案從 CAD 量測。</p>
+        </div>
+      </div>
+    </div>
+    <aside class="keypoints">
+      <h3>本章重點</h3>
+      <ul>
+        <li>能量以彈性位能的形式儲存在主發條中，上滿理論上可運轉 79 小時。</li>
+        <li>上鍊路徑：柄軸 → 立輪 → 小鋼輪 → 大鋼輪 → 發條軸；錶冠約轉 47 圈上滿。</li>
+        <li>棘爪只允許單向轉動，能量只能從發條盒輸出。</li>
+        <li>主發條外端以摩擦力貼附筒壁，上滿後打滑，防止過度上鍊。</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<!-- ───────────── 第 3 章 輪系齒數比 ───────────── -->
+<section class="chapter" id="train" aria-labelledby="h-train">
+  <div class="wrap">
+    <header class="ch-head">
+      <p class="ch-no">第 3 章</p>
+      <h2 id="h-train">輪系齒數比</h2>
+      <p class="lead">發條盒每小時只轉 0.15 圈，秒輪卻每分鐘轉一圈。傳動輪系用四級齒輪把轉速逐級提高，同時把主發條的能量送到擒縱機構。</p>
+    </header>
+    <div class="ch-body">
+      <figure class="stage">
+        <svg id="svg-train" role="img" aria-labelledby="cap-train"></svg>
+        <figcaption id="cap-train">OM10 的走時輪系，依官方模數換算的節圓等比例繪製（齒數為實際齒數）。虛線是節圓，秒輪上的白線是小秒針。點選齒輪可以查看那一組嚙合。</figcaption>
+      </figure>
+      <div class="side">
+        <div class="ctrl" role="group" aria-label="播放速度">
+          <span class="ctrl-label">速度</span>
+          <button type="button" data-speed="1" aria-pressed="true">1×　實際速度</button>
+          <button type="button" data-speed="60" aria-pressed="false">60×</button>
+          <button type="button" data-speed="3600" aria-pressed="false">3600×</button>
+          <button type="button" id="tr-play" aria-pressed="false">暫停</button>
+        </div>
+        <div class="ctrl" role="group" aria-label="選擇嚙合">
+          <span class="ctrl-label">嚙合</span>
+          <button type="button" data-mesh="0" aria-pressed="true">發條盒 → 中心輪</button>
+          <button type="button" data-mesh="1" aria-pressed="false">中心輪 → 三輪</button>
+          <button type="button" data-mesh="2" aria-pressed="false">三輪 → 秒輪</button>
+          <button type="button" data-mesh="3" aria-pressed="false">秒輪 → 擒縱輪</button>
+        </div>
+        <p class="mesh-info" id="tr-mesh" aria-live="polite"></p>
+        <dl class="readout">
+          <dt>機芯時間</dt><dd id="tr-time">經過 0:00:00</dd>
+        </dl>
+        <div class="prose">
+          <h3>輪片與齒軸</h3>
+          <p>輪系的每一個輪都由同軸固定的大<b class="term">輪片</b>和小<b class="term">齒軸</b>組成。輪片帶動下一個輪的齒軸：輪片轉一圈，齒軸轉好幾圈，所以每經過一級，轉速就提高。兩個嚙合齒輪的轉速比，等於齒數比的倒數。</p>
+          <h3>四級增速</h3>
+          <p>相鄰的兩個輪轉向相反。圖中的虛線是各齒輪的<b class="term">節圓</b>（半徑 = 模數 × 齒數 ÷ 2），兩個嚙合齒輪的節圓正好相切。</p>
+          <div class="table-wrap">
+            <table class="data" id="tr-table">
+              <thead><tr><th>輪</th><th>齒軸／輪片</th><th>每小時圈數</th><th>一圈需時</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p class="src" id="tr-total"></p>
+        </div>
+      </div>
+    </div>
+    <aside class="keypoints">
+      <h3>本章重點</h3>
+      <ul>
+        <li>每個輪由輪片和齒軸組成；兩個嚙合齒輪的轉速比等於齒數比的倒數。</li>
+        <li>四級嚙合 107／16、75／10、72／9、84／8，總增速比約 4,213（推算）。</li>
+        <li>中心輪每小時一圈、秒輪每分鐘一圈、擒縱輪每分鐘 10.5 圈。</li>
+        <li>轉速逐級提高，扭力逐級降低；相鄰兩輪轉向相反。</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<!-- ───────────── 第 4 章 擒縱的四個階段 ───────────── -->
+<section class="chapter" id="escapement" aria-labelledby="h-esc">
+  <div class="wrap">
+    <header class="ch-head">
+      <p class="ch-no">第 4 章</p>
+      <h2 id="h-esc">擒縱的四個階段</h2>
+      <p class="lead">輪系的扭力是連續的，時間卻必須等分計量。擒縱機構交替鎖住和放行擒縱輪：每放行一次，輪系前進一小步，同時把一小份能量交給擺輪，維持它的擺動。OM10 採用瑞士槓桿式擒縱。</p>
+    </header>
+    <div class="ch-body">
+      <figure class="stage">
+        <svg id="svg-esc" viewBox="2 6 88 52" role="img" aria-labelledby="cap-esc"></svg>
+        <figcaption id="cap-esc">瑞士槓桿式擒縱，示意圖，未依比例；擒縱輪為 OM10 的 20 齒。金色圓圈是這個階段的接觸點，金線是能量的去向。
+          <span class="legend">1 擒縱輪　2 擒縱叉　3 叉瓦（紅寶石）　4 限位釘　5 衝擊釘　6 擺輪</span>
+        </figcaption>
+      </figure>
+      <div class="side">
+        <div class="ctrl" role="group" aria-label="擒縱階段">
+          <span class="ctrl-label">階段</span>
+          <button type="button" data-phase="0" aria-pressed="true">1　鎖定</button>
+          <button type="button" data-phase="1" aria-pressed="false">2　解鎖</button>
+          <button type="button" data-phase="2" aria-pressed="false">3　衝擊</button>
+          <button type="button" data-phase="3" aria-pressed="false">4　落下</button>
+          <button type="button" id="esc-next">下一階段 →</button>
+        </div>
+        <div class="phase-card" aria-live="polite">
+          <h3 id="esc-title">鎖定</h3>
+          <p id="esc-text"></p>
+        </div>
+        <dl class="readout">
+          <dt>擺動</dt><dd id="esc-beats">0 次</dd>
+          <dt>擒縱輪</dt><dd id="esc-teeth">前進 0 齒</dd>
+        </dl>
+        <div class="prose">
+          <h3>構造</h3>
+          <p>擒縱機構由三部分組成：輪系末端的<b class="term">擒縱輪</b>，OM10 為 20 齒；在擒縱輪與擺輪之間擺動的<b class="term">擒縱叉</b>，一端裝著兩顆紅寶石<b class="term">叉瓦</b>，另一端是叉口；以及擺軸上的雙圓盤，上面固定著<b class="term">衝擊釘</b>。擒縱叉每次擺動之後，停靠在<b class="term">限位釘</b>上。</p>
+          <h3>安全機構</h3>
+          <p>叉瓦的鎖定面與擒縱輪的齒成一個小角度，使齒的推力把擒縱叉拉向限位釘，這稱為<b class="term">牽引</b>。因此擺輪自由擺動時，擒縱叉不會自行鬆開；解鎖時，擒縱輪也會被稍微推回。</p>
+          <h3>技術數據</h3>
+          <dl class="figures">
+            <div><dt>3.5 Hz</dt><dd>頻率：每秒放行 7 次，每小時 25,200 次</dd></div>
+            <div><dt>20 齒</dt><dd>擒縱輪，每次擺動前進半齒</dd></div>
+            <div><dt>10.5 圈／分鐘</dt><dd>擒縱輪轉速</dd></div>
+            <div><dt>50／52°</dt><dd>抬升角，依製造商而定</dd></div>
+          </dl>
+          <p class="src">技術資料 p.1–2。每小時 25,200 次 ÷ 3,600 = 7 次／秒；630 圈／小時 × 20 齒 ÷ 3,600 = 3.5 齒／秒，即每次擺動半齒。</p>
+        </div>
+      </div>
+    </div>
+    <aside class="keypoints">
+      <h3>本章重點</h3>
+      <ul>
+        <li>擒縱機構把連續的扭力分成等份，每次擺動放行一次。</li>
+        <li>一次擺動有四個階段：鎖定、解鎖、衝擊、落下。</li>
+        <li>只有解鎖和衝擊時擺輪才接觸擒縱叉，其餘時間自由擺動。</li>
+        <li>OM10 每秒放行 7 次（3.5 Hz），擒縱輪每次前進半齒；滴答聲來自齒落在叉瓦上的撞擊。</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <h2>資料來源</h2>
+    <ul>
+      <li><a href="https://openmovement.org/documents/OM10/OM10_Technical_Information_20210314.pdf">OM10 Technical Information</a>（2021-03-14，openmovement，CC BY-SA 3.0）：頻率、輪系齒數與模數、扭力、發條軸圈數、動力儲存、錶冠段位、撥針輪系齒數、抬升角。</li>
+      <li><a href="https://openmovement.org/project/om10/">openmovement OM10 專案頁</a>：動力儲存至少 50 小時。</li>
+      <li>上鍊輪系齒數（立輪 16、小鋼輪 31、大鋼輪 63）、柄軸每段移動量、撥針滑架轉角：原專案依 OM10 的 CAD 檔量測。</li>
+      <li>「推算」：由上列資料計算的值。「示意」：表現原理，未依比例。</li>
+    </ul>
+    <p>本頁是《OM10 機芯解剖》3D 教學網站的 2D 精簡版，文字改寫自原專案已審閱的章節內容。單一 HTML 檔，不使用任何 JavaScript 函式庫。</p>
+  </div>
+</footer>
+
+<noscript><p class="wrap note">這一頁的圖解需要 JavaScript 才能操作。</p></noscript>
+
+<script>
+'use strict';
+/* ═════════════ 數據：所有數字只寫在這裡，其他地方一律由它計算 ═════════════ */
+const DATA = {
+  hz: 3.5,                                   // TI p.1–2
+  train: [                                   // TI p.2：齒軸葉數／輪片齒數
+    { id: 'barrel',  name: '發條盒', pinion: null, wheel: 107 },
+    { id: 'centre',  name: '中心輪', pinion: 16, wheel: 75 },
+    { id: 'third',   name: '三輪',   pinion: 10, wheel: 72 },
+    { id: 'seconds', name: '秒輪',   pinion: 9,  wheel: 84 },
+    { id: 'escape',  name: '擒縱輪', pinion: 8,  wheel: 20 },
+  ],
+  module: [0.13, 0.11, 0.11, 0.08],          // mm，TI p.2：每一組嚙合
+  escapeWheelMm: 5,                          // 擒縱輪直徑約 5 mm（原專案 3D 模型）
+  arborFull: 11.79,                          // 發條軸上滿圈數，TI p.3
+  winding: { windingPinion: 16, crownWheel: 31, ratchet: 63 },  // CAD 量測
+  setting: { slidingPinion: 12, settingWheel: 15, intermediate: 20, hourCorrector: 20,
+             minuteWheel: 48, minutePinion: 12, cannonPinion: 18, hourWheel: 54, dateFingers: 3 },
+  carriageDeg: 19,                           // 撥針滑架轉角（CAD 推算）
+};
+const T = DATA.train;
+
+/** 每小時圈數：擒縱輪每次擺動前進半齒，往上逐級除以「輪片齒數 ÷ 下一個齒軸葉數」。 */
+const TPH = (() => {
+  const out = {};
+  let tph = DATA.hz * 2 * 0.5 / T[4].wheel * 3600;   // 擒縱輪 630 圈／小時
+  out.escape = tph;
+  for (let i = 3; i >= 0; i--) { tph = tph * T[i + 1].pinion / T[i].wheel; out[T[i].id] = tph; }
+  return out;
+})();
+const TOTAL_RATIO = T.slice(0, 4).reduce((r, g, k) => r * g.wheel / T[k + 1].pinion, 1);   // ≈ 4213
+const ARBOR_PER_CROWN = DATA.winding.windingPinion / DATA.winding.ratchet;                 // 16/63
+const RESERVE_MAX_H = DATA.arborFull / TPH.barrel;                                         // ≈ 79
+const S = DATA.setting;
+const CROWN_PER_HOUR = S.cannonPinion / S.slidingPinion;                                   // 1.5
+const DATES_PER_CROWN = S.slidingPinion / S.intermediate * S.dateFingers;                  // 1.8
+
+/* ═════════════ 共用工具 ═════════════ */
+const $ = (q, r = document) => r.querySelector(q);
+const $$ = (q, r = document) => [...r.querySelectorAll(q)];
+const SVGNS = 'http://www.w3.org/2000/svg';
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rad = (d) => d * Math.PI / 180;
+const deg = (r) => r * 180 / Math.PI;
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+const frac = (x) => x - Math.floor(x);
+const mod = (x, n) => ((x % n) + n) % n;
+const smooth = (e) => e * e * (3 - 2 * e);
+const nf = (x, d = 0) => x.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+const trim = (x, d) => String(Number(x.toFixed(d)));
+
+function el(tag, attrs = {}, parent) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+const pt = (cx, cy, r, a) => [cx + r * Math.cos(rad(a)), cy + r * Math.sin(rad(a))];
+const f3 = (v) => +v.toFixed(3);
+const poly = (pts) => 'M' + pts.map((p) => f3(p[0]) + ' ' + f3(p[1])).join('L') + 'Z';
+const circlePath = (r, cx = 0, cy = 0) => `M${cx + r} ${cy}A${r} ${r} 0 1 0 ${cx - r} ${cy}A${r} ${r} 0 1 0 ${cx + r} ${cy}Z`;
+function rotAbout(p, c, a) {
+  const s = Math.sin(rad(a)), co = Math.cos(rad(a)), x = p[0] - c[0], y = p[1] - c[1];
+  return [c[0] + x * co - y * s, c[1] + x * s + y * co];
+}
+
+/** 齒輪輪廓（中心在原點）。齒的中心在 0.3 個齒距，齒溝中心在 0.8 個齒距。 */
+const TOOTH_C = 0.3, GAP_C = 0.8;
+function gearPath(teeth, r, depth) {
+  const ro = r + depth * 0.45, ri = r - depth * 0.55, step = 360 / teeth, pts = [];
+  for (let i = 0; i < teeth; i++) {
+    const a = i * step;
+    pts.push(pt(0, 0, ri, a), pt(0, 0, ro, a + step * 0.16), pt(0, 0, ro, a + step * 0.44), pt(0, 0, ri, a + step * 0.6));
+  }
+  return poly(pts);
+}
+/** 擒縱輪的棒頭齒：齒尖前緣在 i × 齒距，往順時針方向前傾。 */
+function escapePath(teeth, r, depth) {
+  const p = 360 / teeth, rr = r - depth, pts = [];
+  for (let i = 0; i < teeth; i++) {
+    const a = i * p;
+    pts.push(pt(0, 0, rr, a - 0.62 * p), pt(0, 0, r, a - 0.13 * p), pt(0, 0, r, a), pt(0, 0, rr + depth * 0.1, a - 0.05 * p));
+  }
+  return poly(pts);
+}
+/** 一個輪：齒形＋鏤空的輪輻（輪輻之間透空，可以看到下層的零件）。 */
+function makeWheel(parent, { teeth, r, depth, spokes = 0, kind = 'gear', cls = 'wheel', hole = 0 }) {
+  const g = el('g', { class: cls }, parent);
+  const teethD = kind === 'escape' ? escapePath(teeth, r, depth) : gearPath(teeth, r, depth);
+  const ri = r - depth * (kind === 'escape' ? 1 : 0.55);
+  if (spokes) {
+    const rim = ri - Math.max(r * 0.12, depth * 0.7), hub = r * 0.2, w = Math.max(r * 0.055, 0.12);
+    el('path', { d: teethD + circlePath(rim), 'fill-rule': 'evenodd', class: 'body' }, g);
+    let d = '';
+    for (let k = 0; k < spokes; k++) {
+      const a = k * 360 / spokes + 90, ux = Math.cos(rad(a)), uy = Math.sin(rad(a)), nx = -uy * w, ny = ux * w;
+      d += poly([[ux * hub * 0.8 + nx, uy * hub * 0.8 + ny], [ux * rim + nx, uy * rim + ny], [ux * rim - nx, uy * rim - ny], [ux * hub * 0.8 - nx, uy * hub * 0.8 - ny]]);
+    }
+    el('path', { d, class: 'spoke' }, g);
+    el('circle', { r: hub, class: 'hub' }, g);
+  } else {
+    el('path', { d: hole ? teethD + circlePath(hole) : teethD, 'fill-rule': 'evenodd', class: 'body' }, g);
+  }
+  el('circle', { r: Math.max(r * 0.05, 0.14), class: 'axle' }, g);
+  return g;
+}
+/** 側視的圓柱（柄軸上的錶冠、立輪、離合輪）：轉動時表面的紋路上下移動。 */
+function cylinder(parent, { x0, x1, cy, R, n = 12 }) {
+  const g = el('g', {}, parent);
+  el('rect', { x: x0, y: cy - R, width: x1 - x0, height: 2 * R, rx: Math.min(0.8, R * 0.25), class: 'body' }, g);
+  const lines = Array.from({ length: n }, () => el('line', { x1: x0 + 0.3, x2: x1 - 0.3, class: 'knurl' }, g));
+  const update = (turns) => lines.forEach((ln, k) => {
+    const a = 2 * Math.PI * (k / n + turns), y = f3(cy + R * 0.92 * Math.sin(a)), v = Math.cos(a);
+    ln.setAttribute('y1', y); ln.setAttribute('y2', y);
+    ln.setAttribute('opacity', v > 0 ? (0.2 + 0.8 * v).toFixed(2) : 0);
+  });
+  update(0);
+  return { g, update };
+}
+function marker(parent, n, x, y) {
+  const g = el('g', { class: 'marker', transform: `translate(${f3(x)} ${f3(y)})`, 'aria-hidden': 'true' }, parent);
+  el('circle', { r: 2.1 }, g);
+  el('text', { y: 0.1 }, g).textContent = n;
+  return g;
+}
+function tween(from, to, ms, onUpdate, onDone) {
+  if (REDUCED || ms <= 0) { onUpdate({ ...to }); if (onDone) onDone(); return () => {}; }
+  const t0 = performance.now();
+  let id, stopped = false;
+  const step = (now) => {
+    if (stopped) return;
+    const t = Math.min(1, (now - t0) / ms), e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2, v = {};
+    for (const k in to) v[k] = from[k] + (to[k] - from[k]) * e;
+    onUpdate(v);
+    if (t < 1) id = requestAnimationFrame(step); else if (onDone) onDone();
+  };
+  id = requestAnimationFrame(step);
+  return () => { stopped = true; cancelAnimationFrame(id); };
+}
+/** 按住才作用的按鈕：滑鼠、觸控、鍵盤（空白鍵／Enter）都可以。 */
+function holdButton(btn, onChange) {
+  let on = false;
+  const set = (v) => { if (v === on) return; on = v; btn.classList.toggle('held', v); onChange(v); };
+  btn.addEventListener('pointerdown', (e) => { e.preventDefault(); try { btn.setPointerCapture(e.pointerId); } catch (_) {} set(true); });
+  ['pointerup', 'pointercancel', 'lostpointercapture', 'blur'].forEach((t) => btn.addEventListener(t, () => set(false)));
+  btn.addEventListener('keydown', (e) => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); set(true); } });
+  btn.addEventListener('keyup', (e) => { if (e.key === ' ' || e.key === 'Enter') set(false); });
+  btn.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+function pressGroup(buttons, active) { buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === active))); }
+function setText(node, text) { if (node.textContent !== text) node.textContent = text; }
+
+/* 動畫迴圈：只更新畫面上看得到的章節 */
+const visible = {};
+const ticks = [];
+let lastFrame = performance.now();
+function frame(now) {
+  const dt = Math.min(0.1, (now - lastFrame) / 1000);
+  lastFrame = now;
+  for (const f of ticks) f(dt, now);
+  requestAnimationFrame(frame);
+}
+
+/* ═════════════ 動力狀態（第 1、2 章共用） ═════════════ */
+const power = {
+  arbor: 40 * TPH.barrel,   // 已捲緊的發條軸圈數（0 – 11.79）；一開始約剩 40 小時
+  arborTotal: 0,            // 發條軸累計轉過的圈數（畫面用）
+  run: 0,                   // 發條盒累計轉過的圈數（畫面用）
+  crown: 0,                 // 錶冠累計上鍊圈數
+  fast: false,
+  slipAt: -1e9, blockAt: -1e9, windAt: -1e9,
+  get reserve() { return this.arbor / TPH.barrel; },
+  wind(dc) {                // dc：錶冠朝上鍊方向轉的圈數
+    const da = dc * ARBOR_PER_CROWN, now = performance.now();
+    this.crown += dc; this.arborTotal += da; this.windAt = now;
+    if (this.arbor + da > DATA.arborFull) this.slipAt = now;
+    this.arbor = Math.min(DATA.arborFull, this.arbor + da);
+  },
+  block() { this.blockAt = performance.now(); },
+  runHours(h) { const dr = Math.min(this.arbor, h * TPH.barrel); this.arbor -= dr; this.run += dr; },
+};
+ticks.push((dt) => power.runHours(power.fast ? dt : dt / 3600));
+
+/* ═════════════ 第 1 章 錶冠三段 ═════════════ */
+function initCrown() {
+  const svg = $('#svg-crown');
+  const Y = 33;                                         // 柄軸中心線
+  const SW = [55, 44.5], SWR = 6;                       // 撥針輪
+  const IVR = 7.5, IV0 = pt(SW[0], SW[1], SWR + IVR, 140);   // 中介輪（與日期校正輪、時間校正輪同軸）
+  const FING = 10.5;                                    // 日期校正輪爪長
+  const RC = [45, -200];                                // 日期盤圓心（遠在圖外）
+  const RT = Math.hypot(IV0[0] - RC[0], IV0[1] - RC[1]) + FING - 1.2, RR = RT + 2.5, RO = RT + 7;
+  const DSTEP = deg(4.8 / RR);                          // 日期盤一齒的角度（示意的齒距）
+  const IV1 = rotAbout(IV0, SW, DATA.carriageDeg);
+  const MWR = 13, MW = pt(IV1[0], IV1[1], IVR + MWR, 200);  // 跨輪：滑架轉到第 3 段時才咬到
+  const CW = [76.25, 19.5], CWR = 8.6;                  // 小鋼輪
+  const LP = [95, 47], YP = [84, 53];                   // 拉檔、離合桿的支點
+
+  const st = { pos: 1, p: 1, c: 0, wp: 0, set: 0, inter: 0, dateProg: 0, slip: 0, minutes: 10 * 60 + 8,
+               date0: 30, dayMax: 0, midnight: 0, dir: 0, dragDir: 0, dragAt: -1e9 };
+
+  // 日期盤（局部），內齒朝上
+  const ringG = el('g', { class: 'date-disc' }, svg);
+  {
+    const span = 13, outer = [], inner = [];
+    for (let b = 90 - span; b <= 90 + span + 1e-9; b += 0.5) outer.push(pt(RC[0], RC[1], RO, b));
+    for (let b = 90 + span; b >= 90 - span; b -= DSTEP) {
+      inner.push(pt(RC[0], RC[1], RR, b), pt(RC[0], RC[1], RT, b - DSTEP * 0.25), pt(RC[0], RC[1], RT, b - DSTEP * 0.5), pt(RC[0], RC[1], RR, b - DSTEP * 0.75));
+    }
+    el('path', { d: poly(outer.concat(inner)), class: 'date-disc' }, ringG);
+  }
+  // 跨輪（48 齒）與它的齒軸（12 葉）
+  const mwG = el('g', { transform: `translate(${f3(MW[0])} ${f3(MW[1])})` }, svg);
+  const mwRot = el('g', {}, mwG);
+  makeWheel(mwRot, { teeth: S.minuteWheel, r: MWR, depth: 0.8, spokes: 4, cls: 'steel' });
+  makeWheel(mwRot, { teeth: S.minutePinion, r: MWR * 12 / 48, depth: 0.7, cls: 'steel' });
+  // 撥針滑架：底板、撥針輪、中介輪＋日期校正輪
+  const carG = el('g', {}, svg);
+  el('path', { d: circlePath(3.4, SW[0], SW[1]) + circlePath(4.6, IV0[0], IV0[1]) + poly([pt(SW[0], SW[1], 3.4, 50), pt(IV0[0], IV0[1], 4.6, 50), pt(IV0[0], IV0[1], 4.6, 230), pt(SW[0], SW[1], 3.4, 230)]), class: 'plate' }, carG);
+  const swG = el('g', { transform: `translate(${SW[0]} ${SW[1]})` }, carG);
+  const swRot = el('g', {}, swG);
+  makeWheel(swRot, { teeth: S.settingWheel, r: SWR, depth: 0.9, cls: 'steel' });
+  const ivG = el('g', { transform: `translate(${f3(IV0[0])} ${f3(IV0[1])})` }, carG);
+  const ivRot = el('g', {}, ivG);
+  const ivWheel = makeWheel(ivRot, { teeth: S.intermediate, r: IVR, depth: 0.9, cls: 'steel' });
+  const finger = el('g', { class: 'steel' }, ivRot);
+  {
+    let d = '';
+    for (let k = 0; k < 3; k++) {
+      const a = k * 120;
+      d += poly([pt(0, 0, 2.2, a - 22), pt(0, 0, FING - 0.4, a - 4), pt(0, 0, FING, a), pt(0, 0, FING - 0.4, a + 3), pt(0, 0, 2.2, a + 22)]);
+    }
+    el('path', { d, class: 'body' }, finger);
+  }
+  el('circle', { cx: SW[0], cy: SW[1], r: 0.7, class: 'pivot' }, carG);
+  // 小鋼輪（往第 2 章）
+  const cwG = el('g', { transform: `translate(${CW[0]} ${CW[1]})` }, svg);
+  const cwRot = el('g', {}, cwG);
+  makeWheel(cwRot, { teeth: DATA.winding.crownWheel, r: CWR, depth: 0.9, cls: 'steel', hole: 1.2 });
+  // 拉檔、離合桿
+  const lever = el('path', { class: 'lever' }, svg);
+  const yoke = el('path', { class: 'lever' }, svg);
+  el('circle', { cx: LP[0], cy: LP[1], r: 0.9, class: 'pivot' }, svg);
+  el('circle', { cx: YP[0], cy: YP[1], r: 0.9, class: 'pivot' }, svg);
+  const leverPin = el('circle', { r: 0.8, class: 'pivot' }, svg);
+  const bar = (a, b, w) => {
+    const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy), nx = -dy / L * w / 2, ny = dx / L * w / 2;
+    return poly([[a[0] + nx, a[1] + ny], [b[0] + nx, b[1] + ny], [b[0] - nx, b[1] - ny], [a[0] - nx, a[1] - ny]]);
+  };
+  // 柄軸＋錶冠（會往外移）
+  const stemG = el('g', { class: 'steel' }, svg);
+  el('rect', { x: 50, y: Y - 0.9, width: 52, height: 1.8, class: 'body' }, stemG);
+  el('rect', { x: 86.5, y: Y - 1.15, width: 1.4, height: 2.3, class: 'axle' }, stemG);      // 拉檔銷卡住的溝槽
+  const crownC = cylinder(stemG, { x0: 101, x1: 110, cy: Y, R: 5, n: 16 });
+  // 立輪（固定位置）
+  const wpG = el('g', { class: 'steel' }, svg);
+  const wpC = cylinder(wpG, { x0: 72.5, x1: 80, cy: Y, R: 4.2, n: 12 });
+  const zig = (x, y0, y1, dir, n) => {
+    const pts = [], h = (y1 - y0) / n;
+    for (let k = 0; k <= n; k++) pts.push([x + (k % 2 ? dir * 0.7 : 0), y0 + k * h]);
+    return 'M' + pts.map((p) => f3(p[0]) + ' ' + f3(p[1])).join('L');
+  };
+  el('path', { d: zig(72.5, Y - 4.2, Y + 4.2, -1, 8), class: 'teeth-edge' }, wpG);
+  // 離合輪（滑動）
+  const spG = el('g', { class: 'steel' }, svg);
+  const spC = cylinder(spG, { x0: 61.5, x1: 72, cy: Y, R: 4.5, n: 12 });
+  el('path', { d: zig(72, Y - 4.2, Y + 4.2, 1, 8), class: 'teeth-edge' }, spG);           // 端面齒
+  el('path', { d: `M61.5 ${Y + 4.5}` + Array.from({ length: 7 }, (_, k) => `L${61.75 + k * 0.5} ${Y + 4.5 + (k % 2 ? 0 : 0.8)}`).join(''), class: 'teeth-edge' }, spG);   // 徑向齒（朝撥針輪）
+  // 錶冠拖曳區
+  const hit = el('rect', { x: 98, y: Y - 9, width: 16, height: 18, class: 'hit' }, stemG);
+  // 標號
+  marker(stemG, 1, 105.5, Y - 8.2);
+  marker(stemG, 2, 95, Y - 3.6);
+  marker(spG, 3, 66.75, Y - 7.4);
+  marker(svg, 4, 76.25, Y + 7.2);
+  marker(svg, 5, CW[0] + 10.2, CW[1] - 6);
+  marker(svg, 6, 99.5, 50.5);
+  marker(svg, 7, 80, 48);
+  marker(svg, 8, SW[0] + 7.5, SW[1] + 4.5);
+  const m9 = marker(svg, 9, 0, 0), m10 = marker(svg, 10, 0, 0);
+  marker(svg, 11, 22, 66.6);
+  marker(svg, 12, MW[0] - 9.5, MW[1] - 10);
+
+  const parts = { sp: spG, wp: wpG, cw: cwG, sw: swRot, iv: ivRot, ring: ringG, mw: mwRot };
+  const ON = { 1: ['sp', 'wp', 'cw'], 2: ['sp', 'sw', 'iv', 'ring'], 3: ['sp', 'sw', 'iv', 'mw'] };
+  const NAMES = { 1: '第 1 段：上鍊', 2: '第 2 段：調日期', 3: '第 3 段：調時間' };
+  const posBtns = $$('#crown [data-pos]');
+
+  const drawDial = makeDial($('#dial'));
+  let cancelPos = () => {};
+  function setPos(n) {
+    n = clamp(n, 1, 3);
+    if (n === st.pos) return;
+    st.pos = n;
+    pressGroup(posBtns, posBtns[n - 1]);
+    for (const k in parts) parts[k].classList.toggle('on', ON[n].includes(k));
+    cancelPos();
+    cancelPos = tween({ p: st.p }, { p: n }, 380, (v) => { st.p = v.p; });
+  }
+  posBtns.forEach((b) => b.addEventListener('click', () => setPos(+b.dataset.pos)));
+  for (const k in parts) parts[k].classList.toggle('on', ON[1].includes(k));
+
+  function applyTurn(dc) {                 // dc：錶冠轉的圈數，正值為順轉
+    st.c += dc;
+    if (st.pos === 1) {
+      if (dc > 0) { st.wp += dc; power.wind(dc); } else st.slip -= dc;
+      return;
+    }
+    st.set += dc * S.slidingPinion / S.settingWheel;
+    const di = dc * S.slidingPinion / S.intermediate;
+    st.inter += di;
+    if (st.pos === 2 && dc > 0) st.dateProg += di;
+    if (st.pos === 3) {
+      st.minutes += dc * 60 / CROWN_PER_HOUR;
+      const day = Math.floor(st.minutes / 1440);
+      if (day > st.dayMax) { st.midnight += day - st.dayMax; st.dayMax = day; }
+    }
+  }
+  /** 日期校正輪轉了 c 圈時日期盤前進的格數：每一爪在它那三分之一圈的中段推一格。 */
+  const dateSteps = (c) => { const u = c * S.dateFingers, k = Math.floor(u); return k + smooth(clamp((u - k - 0.3) / 0.4, 0, 1)); };
+
+  holdButton($('#crown-fwd'), (on) => { st.dir = on ? 1 : 0; });
+  holdButton($('#crown-back'), (on) => { st.dir = on ? -1 : 0; });
+
+  // 拖曳錶冠：左右切換段位，上下轉動
+  let drag = null;
+  hit.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+  hit.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    hit.setPointerCapture(e.pointerId);
+    drag = { x: e.clientX, y: e.clientY, ly: e.clientY, mode: null };
+  });
+  hit.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (!drag.mode && Math.hypot(dx, dy) > 6) drag.mode = Math.abs(dx) > Math.abs(dy) ? 'pos' : 'turn';
+    if (drag.mode === 'pos') {
+      if (dx > 26) { setPos(st.pos + 1); drag.x = e.clientX; } else if (dx < -26) { setPos(st.pos - 1); drag.x = e.clientX; }
+    } else if (drag.mode === 'turn') {
+      const d = -(e.clientY - drag.ly) / 45;
+      drag.ly = e.clientY;
+      if (d) { applyTurn(d); st.dragDir = Math.sign(d); st.dragAt = performance.now(); }
+    }
+  });
+  ['pointerup', 'pointercancel'].forEach((t) => hit.addEventListener(t, () => { drag = null; }));
+
+  const status = $('#crown-status');
+  function statusText(dir) {
+    const full = power.arbor >= DATA.arborFull - 1e-6;
+    if (st.pos === 1) {
+      if (dir > 0) return full ? '已上滿：主發條外端沿筒壁打滑，多餘的扭力被釋放（第 2 章）。'
+        : '上鍊中：離合輪帶動立輪，經小鋼輪、大鋼輪捲緊主發條。錶冠每轉一圈，發條軸轉 16／63 圈。';
+      if (dir < 0) return '反轉：端面齒的斜面把離合輪頂開，立輪不轉，不上鍊。';
+      return '第 1 段：上鍊。離合輪的端面齒咬住立輪；順轉時經小鋼輪、大鋼輪捲緊主發條。';
+    }
+    if (st.pos === 2) {
+      if (dir > 0) return `調日期：日期校正輪的爪推動日期盤，錶冠每轉一圈約前進 ${trim(DATES_PER_CROWN, 1)} 天（推算）。`;
+      if (dir < 0) return '反方向：校正輪的爪從日期盤的齒旁滑過，日期不動（示意）。';
+      return '第 2 段：調日期。離合輪改咬撥針輪，經中介輪轉動三爪的日期校正輪。';
+    }
+    if (dir > 0) return `調時間：指針前進。錶冠轉 ${trim(CROWN_PER_HOUR, 1)} 圈，分針轉一圈；撥過午夜，日期前進一天。`;
+    if (dir < 0) return '調時間：指針倒退。';
+    return `第 3 段：調時間。撥針滑架轉約 ${DATA.carriageDeg}°，時間校正輪咬住跨輪。`;
+  }
+
+  ticks.push((dt, now) => {
+    if (st.dir) applyTurn(st.dir * dt);
+    const dir = st.dir || (now - st.dragAt < 250 ? st.dragDir : 0);
+    setText(status, statusText(dir));
+    if (!visible.crown) return;
+    const q = st.p - 1, a = clamp(q, 0, 1), b = clamp(q - 1, 0, 1);
+    const dx = q * 3;                                     // 柄軸外移（放大顯示）
+    stemG.setAttribute('transform', `translate(${f3(dx)} 0)`);
+    crownC.update(st.c);
+    const jig = st.pos === 1 && st.p < 1.05 ? -0.8 * frac(st.slip * 10) : 0;   // 端面齒滑開時離合輪一進一退
+    spG.setAttribute('transform', `translate(${f3(-a * 6 + jig)} 0)`);
+    spC.update(st.c);
+    wpC.update(st.wp);
+    cwRot.setAttribute('transform', `rotate(${f3(-st.wp * DATA.winding.windingPinion / DATA.winding.crownWheel * 360)})`);
+    const pin = [87.2 + dx, Y];
+    const tail = [LP[0] + (LP[0] - pin[0]) * 0.35, LP[1] + (LP[1] - pin[1]) * 0.35];
+    lever.setAttribute('d', bar(tail, pin, 1.7));
+    leverPin.setAttribute('cx', f3(pin[0])); leverPin.setAttribute('cy', f3(pin[1]));
+    yoke.setAttribute('d', bar(YP, [66.75 - a * 6, Y + 5.4], 1.5));
+    const swing = DATA.carriageDeg * b;
+    carG.setAttribute('transform', `rotate(${f3(swing)} ${SW[0]} ${SW[1]})`);
+    swRot.setAttribute('transform', `rotate(${f3(-st.set * 360 + 140 - TOOTH_C * 24)})`);
+    ivRot.setAttribute('transform', `rotate(${f3(st.inter * 360 + 320 - GAP_C * 18 + 30)})`);
+    const minuteTurns = st.minutes / 60 * S.cannonPinion / S.minuteWheel;
+    mwRot.setAttribute('transform', `rotate(${f3(-minuteTurns * 360)})`);
+    const steps = dateSteps(st.dateProg) + st.midnight;
+    ringG.setAttribute('transform', `rotate(${f3(steps * DSTEP)} ${RC[0]} ${RC[1]})`);
+    const p9 = rotAbout([SW[0] - 5.6, SW[1] - 3.2], SW, swing), p10 = rotAbout([IV0[0] - 3.5, IV0[1] - 9.5], SW, swing);
+    m9.setAttribute('transform', `translate(${f3(p9[0])} ${f3(p9[1])})`);
+    m10.setAttribute('transform', `translate(${f3(p10[0])} ${f3(p10[1])})`);
+
+    const date = mod(st.date0 - 1 + Math.round(steps), 31) + 1;
+    drawDial(st.minutes, date);
+    const m = mod(st.minutes, 1440), h = Math.floor(m / 60), mm = String(Math.floor(m % 60)).padStart(2, '0');
+    setText($('#crown-time'), `${h < 12 ? '上午' : '下午'} ${(h % 12) || 12}:${mm}`);
+    setText($('#crown-date'), `${date} 日`);
+    setText($('#crown-reserve'), `約 ${Math.round(power.reserve)} 小時（與第 2 章同步）`);
+  });
+  window.__watch.crown = { st, setPos, applyTurn };
+}
+
+function makeDial(svg) {
+  el('circle', { r: 18.6, class: 'dial-face' }, svg);
+  for (let k = 0; k < 60; k++) {
+    const a = k * 6 - 90, major = k % 5 === 0, p1 = pt(0, 0, major ? 15 : 16.3, a), p2 = pt(0, 0, 17.3, a);
+    el('line', { x1: f3(p1[0]), y1: f3(p1[1]), x2: f3(p2[0]), y2: f3(p2[1]), class: major ? 'tick major' : 'tick' }, svg);
+  }
+  const win = el('g', { class: 'datewin' }, svg);
+  el('rect', { x: 7.6, y: -2.6, width: 6.2, height: 5.2, rx: 0.4 }, win);
+  const dateT = el('text', { x: 10.7, y: 0.2 }, win);
+  const hh = el('path', { class: 'hand', d: 'M-1 2.4L-0.4 -9.5L0 -10.2L0.4 -9.5L1 2.4Z' }, svg);
+  const mh = el('path', { class: 'hand min', d: 'M-0.7 2.8L-0.25 -14.6L0 -15.2L0.25 -14.6L0.7 2.8Z' }, svg);
+  el('circle', { r: 1.1, class: 'dial-pin' }, svg);
+  return (minutes, date) => {
+    hh.setAttribute('transform', `rotate(${f3(mod(minutes, 720) / 2)})`);
+    mh.setAttribute('transform', `rotate(${f3(mod(minutes, 60) * 6)})`);
+    setText(dateT, String(date));
+  };
+}
+
+/* ═════════════ 第 2 章 上鍊與動力儲存 ═════════════ */
+function initPower() {
+  const svg = $('#svg-power');
+  const BC = [25, 29], BR = 22, WALL = 19.6, ARB = 3.3;   // 發條盒
+  const RC = [68, 23], RR = 12.5;                         // 大鋼輪
+  const CWR = RR * DATA.winding.crownWheel / DATA.winding.ratchet, CW = [RC[0] + RR + CWR, RC[1]];   // 小鋼輪
+  const PR = 2.4, Y = CW[1] + CWR + PR + 0.15;            // 立輪與柄軸
+  const CP = [96, 13.2];                                  // 棘爪支點
+
+  // 發條盒
+  const bG = el('g', { transform: `translate(${BC[0]} ${BC[1]})` }, svg);
+  el('circle', { r: WALL, class: 'drum-floor' }, bG);
+  const drum = el('g', {}, bG);
+  makeWheel(drum, { teeth: T[0].wheel, r: BR, depth: 0.8, cls: 'wheel', hole: WALL });
+  const spring = el('path', { class: 'spring' }, bG);
+  const bridle = el('rect', { x: -0.6, y: -1.6, width: 1.2, height: 3.2, class: 'slip-mark' }, bG);
+  const arbor = el('g', { class: 'steel' }, bG);
+  el('circle', { r: ARB, class: 'body' }, arbor);
+  el('rect', { x: -1.3, y: -1.3, width: 2.6, height: 2.6, class: 'axle' }, arbor);
+  el('path', { d: poly([[ARB - 0.2, -0.7], [ARB + 0.9, 0], [ARB - 0.2, 0.7]]), class: 'body' }, arbor);   // 勾住主發條內端的勾
+  // 大鋼輪、小鋼輪
+  const ratG = el('g', { transform: `translate(${RC[0]} ${RC[1]})` }, svg);
+  const ratRot = el('g', {}, ratG);
+  makeWheel(ratRot, { teeth: DATA.winding.ratchet, r: RR, depth: 0.95, cls: 'steel' });
+  el('rect', { x: -1.5, y: -1.5, width: 3, height: 3, class: 'axle' }, ratRot);
+  el('circle', { r: 4.2, class: 'pivot' }, ratRot);
+  el('line', { x1: -3.2, y1: 0, x2: 3.2, y2: 0, class: 'knurl' }, ratRot);
+  const cwG = el('g', { transform: `translate(${f3(CW[0])} ${f3(CW[1])})` }, svg);
+  const cwRot = el('g', {}, cwG);
+  makeWheel(cwRot, { teeth: DATA.winding.crownWheel, r: CWR, depth: 0.95, cls: 'steel', hole: 1 });
+  el('line', { x1: -1.6, y1: 0, x2: 1.6, y2: 0, class: 'knurl' }, cwRot);
+  // 棘爪與它的彈簧
+  const tip = pt(CW[0], CW[1], CWR + 0.45, -42);
+  el('path', { d: `M${CP[0] + 4.5} ${CP[1] - 3}l-1.2 1l1 0.8l-1.2 1l1 0.8l-1.6 1.1`, class: 'teeth-edge' }, svg);
+  const click = el('g', { class: 'steel' }, svg);
+  el('path', { d: poly([[CP[0] + 1.2, CP[1] + 0.9], [CP[0] - 0.9, CP[1] - 1.2], [tip[0] - 0.5, tip[1] - 0.2], tip, [tip[0] + 0.9, tip[1] + 0.3]]), class: 'body' }, click);
+  el('circle', { cx: CP[0], cy: CP[1], r: 1.1, class: 'pivot' }, click);
+  // 柄軸、立輪、錶冠
+  const stem = el('g', { class: 'steel' }, svg);
+  el('rect', { x: 79, y: Y - 0.75, width: 23, height: 1.5, class: 'body' }, stem);
+  const wpC = cylinder(stem, { x0: CW[0] - 3.4, x1: CW[0] + 3.4, cy: Y, R: PR, n: 10 });
+  const crownC = cylinder(stem, { x0: 101, x1: 108.5, cy: Y, R: 4.6, n: 16 });
+  const hit = el('rect', { x: 98.5, y: Y - 9, width: 13, height: 18, class: 'hit' }, svg);
+  // 標號
+  marker(svg, 1, BC[0] + 4.6, BC[1] - 3.4);
+  marker(svg, 2, BC[0] - 13.5, BC[1] - 7.5);
+  marker(svg, 3, BC[0] + 17.2, BC[1] + 17.2);
+  marker(svg, 4, RC[0] - 9.6, RC[1] - 10.4);
+  marker(svg, 5, CW[0] + 1.5, CW[1] - CWR - 3.6);
+  marker(svg, 6, CP[0] + 3.4, CP[1] + 3.2);
+  marker(svg, 7, CW[0], Y + 5.2);
+  marker(svg, 8, 104.75, Y + 7.6);
+
+  // 主發條：內端跟著發條軸，外端跟著筒壁；捲得越緊，圈數越多、越靠近發條軸
+  const N0 = 3;
+  function springPath(aArbor, wound) {
+    const w = wound / DATA.arborFull, n = N0 + wound, steps = Math.ceil(n * 40), pts = [];
+    for (let i = 0; i <= steps; i++) {
+      const u = i / steps;
+      const shape = (1 - w) * (1 - (1 - u) * (1 - u)) + w * u * u;
+      const r = ARB + 0.35 + (WALL - 0.5 - ARB - 0.35) * shape;
+      pts.push(pt(0, 0, r, aArbor - u * n * 360));
+    }
+    return 'M' + pts.map((p) => f3(p[0]) + ' ' + f3(p[1])).join('L');
+  }
+
+  const fastBtn = $('#pw-fast');
+  holdButton($('#pw-wind'), (on) => { held = on; });
+  let held = false;
+  $('#pw-back').addEventListener('click', () => power.block());
+  fastBtn.addEventListener('click', () => { power.fast = !power.fast; fastBtn.setAttribute('aria-pressed', String(power.fast)); });
+  $('#pw-reset').addEventListener('click', () => {
+    power.run += power.arbor; power.arbor = 0; power.fast = false; fastBtn.setAttribute('aria-pressed', 'false');
+  });
+  let drag = null;
+  hit.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+  hit.addEventListener('pointerdown', (e) => { e.preventDefault(); hit.setPointerCapture(e.pointerId); drag = { ly: e.clientY, down: 0 }; });
+  hit.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    const dy = e.clientY - drag.ly;
+    drag.ly = e.clientY;
+    if (dy < 0) { power.wind(-dy / 40); drag.down = 0; } else if ((drag.down += dy) > 6) { power.block(); drag.down = 0; }
+  });
+  ['pointerup', 'pointercancel'].forEach((t) => hit.addEventListener(t, () => { drag = null; }));
+
+  const status = $('#pw-status');
+  ticks.push((dt, now) => {
+    if (held) power.wind(2 * dt);                       // 每秒兩圈錶冠
+    let msg;
+    if (now - power.blockAt < 1300) msg = '反轉：棘爪卡進小鋼輪的齒間，錶冠轉不動，能量不會從錶冠洩出。';
+    else if (now - power.slipAt < 400) msg = '已上滿：主發條外端沿筒壁打滑，多餘的扭力被釋放。';
+    else if (now - power.windAt < 200) msg = '上鍊中：發條軸捲緊主發條，棘爪在小鋼輪的齒上滑過。';
+    else if (power.arbor <= 1e-9) msg = '主發條已放鬆，機芯停止。按住「上鍊」或在錶冠上往上拖曳。';
+    else if (power.fast) msg = `快轉放鍊中（3600×）：發條盒每秒轉 ${trim(TPH.barrel, 4)} 圈，相當於實際的一小時。`;
+    else msg = `運轉中：主發條推動筒壁，發條盒每小時轉 ${trim(TPH.barrel, 4)} 圈。`;
+    setText(status, msg);
+    setText($('#pw-crown'), `${nf(power.crown, 1)} 圈（上滿約 47 圈）`);
+    setText($('#pw-arbor'), `${nf(power.arbor, 2)} ／ ${DATA.arborFull} 圈`);
+    setText($('#pw-reserve'), `約 ${Math.round(power.reserve)} 小時`);
+    if (!visible.power) return;
+    $('#pw-fill').style.width = (power.reserve / RESERVE_MAX_H * 100).toFixed(2) + '%';
+    const aArbor = power.arborTotal * 360, aDrum = power.run * 360;
+    drum.setAttribute('transform', `rotate(${f3(mod(aDrum, 360))})`);
+    arbor.setAttribute('transform', `rotate(${f3(mod(aArbor, 360))})`);
+    spring.setAttribute('d', springPath(mod(aArbor, 360), power.arbor));
+    const outer = mod(aArbor, 360) - (N0 + power.arbor) * 360;
+    bridle.setAttribute('transform', `rotate(${f3(outer)}) translate(${WALL - 0.7} 0)`);
+    bridle.classList.toggle('show', now - power.slipAt < 400);
+    const shake = now - power.blockAt < 300 ? Math.sin((now - power.blockAt) / 30) * 1.2 : 0;
+    const crownTurns = power.arborTotal / ARBOR_PER_CROWN;
+    ratRot.setAttribute('transform', `rotate(${f3(mod(aArbor, 360) - TOOTH_C * 360 / DATA.winding.ratchet)})`);
+    cwRot.setAttribute('transform', `rotate(${f3(mod(-crownTurns * DATA.winding.windingPinion / DATA.winding.crownWheel * 360, 360) + 180 - GAP_C * 360 / DATA.winding.crownWheel + shake)})`);
+    const saw = frac(crownTurns * DATA.winding.windingPinion);   // 棘爪隨小鋼輪的齒起落
+    click.setAttribute('transform', `rotate(${f3(-7 * saw)} ${CP[0]} ${CP[1]})`);
+    click.classList.toggle('on', now - power.blockAt < 1300);
+    wpC.update(crownTurns + shake / 40);
+    crownC.update(crownTurns + shake / 40);
+  });
+}
+
+/* ═════════════ 第 3 章 輪系齒數比 ═════════════ */
+function initTrain() {
+  const svg = $('#svg-train'), M = DATA.module;
+  const WR = T.map((g, i) => (i < 4 ? M[i] * g.wheel / 2 : DATA.escapeWheelMm / 2));
+  const PR = T.map((g, i) => (i > 0 ? M[i - 1] * g.pinion / 2 : 0));
+  const DIRS = [-20, 32, -30, 34];                       // 相鄰兩軸連線的方向（度）
+  const SIGN = [-1, 1, -1, 1, -1];                       // 秒輪、中心輪順時針
+  const C = [[0, 0]];
+  for (let k = 0; k < 4; k++) {
+    const d = WR[k] + PR[k + 1];
+    C.push([C[k][0] + d * Math.cos(rad(DIRS[k])), C[k][1] + d * Math.sin(rad(DIRS[k]))]);
+  }
+  const LBL = [[0, -WR[0] - 1.1], [0, -WR[1] - 1.1], [0, WR[2] + 1.6], [0, -WR[3] - 1.1], [0, WR[4] + 1.6]];
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  C.forEach((c, i) => {
+    const r = WR[i] + 0.5;
+    x0 = Math.min(x0, c[0] - r); x1 = Math.max(x1, c[0] + r);
+    y0 = Math.min(y0, c[1] - r, c[1] + LBL[i][1] - 1.6); y1 = Math.max(y1, c[1] + r, c[1] + LBL[i][1] + 0.6);
+  });
+  svg.setAttribute('viewBox', `${f3(x0 - 0.6)} ${f3(y0 - 0.4)} ${f3(x1 - x0 + 1.2)} ${f3(y1 - y0 + 0.8)}`);
+
+  // 齒的相位：嚙合處，輪片的齒對準齒軸的齒溝
+  const WP = T.map((g, k) => (k < 4 ? DIRS[k] - TOOTH_C * 360 / g.wheel : 0));
+  const PP = T.map((g, k) => (k > 0 ? DIRS[k - 1] + 180 - GAP_C * 360 / g.pinion : 0));
+
+  const pitchG = el('g', {}, svg);
+  const mobiles = T.map((g, i) => {
+    const o = el('g', { transform: `translate(${f3(C[i][0])} ${f3(C[i][1])})`, class: 'mobile' }, svg);
+    const depthW = i < 4 ? M[i] * 2.25 : 0.7;
+    const wheel = makeWheel(el('g', {}, o), { teeth: g.wheel, r: WR[i], depth: depthW, spokes: i === 0 ? 0 : (i === 4 ? 5 : 4), kind: i === 4 ? 'escape' : 'gear', cls: 'wheel', hole: i === 0 ? WR[0] * 0.82 : 0 });
+    let pinion = null;
+    if (i > 0) pinion = makeWheel(el('g', {}, o), { teeth: g.pinion, r: PR[i], depth: M[i - 1] * 2.25, cls: 'steel' });
+    if (i === 0) el('circle', { r: 1.2, class: 'pivot' }, wheel);
+    let hand = null;
+    if (g.id === 'seconds') hand = el('line', { x1: 0, y1: 0.9, x2: 0, y2: -WR[i] * 0.9, class: 'hand-s' }, o);
+    const pw = i < 4 ? el('circle', { cx: f3(C[i][0]), cy: f3(C[i][1]), r: f3(WR[i]), class: 'pitch' }, pitchG) : null;
+    const pp = i > 0 ? el('circle', { cx: f3(C[i][0]), cy: f3(C[i][1]), r: f3(PR[i]), class: 'pitch' }, pitchG) : null;
+    const lbl = el('text', { x: f3(C[i][0] + LBL[i][0]), y: f3(C[i][1] + LBL[i][1]), class: 'lbl' }, svg);
+    lbl.textContent = g.name;
+    const sub = el('tspan', { x: f3(C[i][0] + LBL[i][0]), dy: 0.9, class: 'sub' }, lbl);
+    sub.textContent = i === 0 ? `${g.wheel} 齒` : `${g.pinion} 葉／${g.wheel} 齒`;
+    o.addEventListener('click', () => selectMesh(Math.min(i, 3)));
+    return { o, wheel, pinion, hand, pw, pp, lbl };
+  });
+  svg.appendChild(pitchG);
+
+  const meshBtns = $$('#train [data-mesh]'), info = $('#tr-mesh');
+  function selectMesh(k) {
+    pressGroup(meshBtns, meshBtns[k]);
+    mobiles.forEach((m, i) => {
+      m.wheel.classList.toggle('on', i === k);
+      if (m.pinion) m.pinion.classList.toggle('on', i === k + 1);
+      if (m.pw) m.pw.classList.toggle('on', i === k);
+      if (m.pp) m.pp.classList.toggle('on', i === k + 1);
+      m.lbl.classList.toggle('on', i === k || i === k + 1);
+    });
+    const a = T[k], b = T[k + 1], r = a.wheel / b.pinion;
+    info.innerHTML = `<strong>${a.name}</strong>的輪片 ${a.wheel} 齒 → <strong>${b.name}</strong>的齒軸 ${b.pinion} 葉：${b.name}轉速是${a.name}的 ${a.wheel} ÷ ${b.pinion} ≈ <strong>${trim(r, 2)} 倍</strong>，轉向相反。`;
+  }
+  meshBtns.forEach((b) => b.addEventListener('click', () => selectMesh(+b.dataset.mesh)));
+  selectMesh(0);
+
+  // 表格與總增速比
+  const period = (tph) => {
+    const s = 3600 / tph;
+    let shown, label;
+    if (s >= 3600) { const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60); shown = h * 3600 + m * 60; label = m ? `${h} 小時 ${m} 分` : `${h} 小時`; }
+    else if (s >= 60) { shown = Math.round(s / 60) * 60; label = `${Math.round(s / 60)} 分鐘`; }
+    else { shown = Math.round(s * 10) / 10; label = `${trim(s, 1)} 秒`; }
+    return Math.abs(s - shown) > 1e-6 ? `約 ${label}` : label;     // 有四捨五入就標「約」
+  };
+  $('#tr-table tbody').innerHTML = T.map((g) => {
+    const tph = TPH[g.id];
+    return `<tr><td>${g.name}</td><td>${g.pinion ? g.pinion + '／' + g.wheel : '—／' + g.wheel}</td><td>${tph < 1 ? trim(tph, 4) : trim(tph, 1)}</td><td>${period(tph)}</td></tr>`;
+  }).join('');
+  $('#tr-total').textContent = `總增速比 = ${T.slice(0, 4).map((g) => g.wheel).join('·')} ÷ (${T.slice(1).map((g) => g.pinion).join('·')}) ≈ ${nf(Math.round(TOTAL_RATIO))}（推算）：發條盒轉一圈，擒縱輪約轉 ${nf(Math.round(TOTAL_RATIO))} 圈。扭力則逐級降低，從發條盒的 9.08 N·mm 降到擒縱輪的 1.54 µN·m（技術資料 p.2）。`;
+
+  // 播放
+  const st = { t: 0, speed: 1, playing: !REDUCED };
+  const speedBtns = $$('#train [data-speed]'), playBtn = $('#tr-play');
+  const syncPlay = () => { playBtn.textContent = st.playing ? '暫停' : '播放'; playBtn.setAttribute('aria-pressed', String(!st.playing)); };
+  speedBtns.forEach((b) => b.addEventListener('click', () => { st.speed = +b.dataset.speed; pressGroup(speedBtns, b); if (!st.playing) { st.playing = true; syncPlay(); } }));
+  playBtn.addEventListener('click', () => { st.playing = !st.playing; syncPlay(); });
+  syncPlay();
+
+  const escRps = TPH.escape / 3600, beatsPerSec = DATA.hz * 2, halfTooth = 0.5 / T[4].wheel;
+  function escapeTurns() {
+    if (st.speed !== 1) return st.t * escRps;
+    const beats = st.t * beatsPerSec, k = Math.floor(beats);       // 1× 時擒縱輪隨每次擺動步進
+    return (k + smooth(clamp((beats - k) / 0.3, 0, 1))) * halfTooth;
+  }
+  ticks.push((dt) => {
+    if (!visible.train) return;
+    if (st.playing) st.t += dt * st.speed;
+    const esc = escapeTurns();
+    mobiles.forEach((m, i) => {
+      const turns = esc * TPH[T[i].id] / TPH.escape, a = SIGN[i] * mod(turns, 1) * 360;
+      m.wheel.setAttribute('transform', `rotate(${f3(a + WP[i])})`);
+      if (m.pinion) m.pinion.setAttribute('transform', `rotate(${f3(a + PP[i])})`);
+      if (m.hand) m.hand.setAttribute('transform', `rotate(${f3(a)})`);
+    });
+    const s = Math.floor(st.t), hh = Math.floor(s / 3600), mm = String(Math.floor(s / 60) % 60).padStart(2, '0'), ss = String(s % 60).padStart(2, '0');
+    setText($('#tr-time'), `經過 ${hh}:${mm}:${ss}`);
+  });
+  window.__watch.train = { st, C, WR, PR };
+}
+
+/* ═════════════ 第 4 章 擒縱的四個階段 ═════════════ */
+function initEscapement() {
+  const svg = $('#svg-esc');
+  const E = [26, 32], R = 20, DEPTH = 3.6, HALF = 22.5;          // 叉瓦相隔 2.5 個齒距（45°）
+  const P = [E[0] + R / Math.cos(rad(HALF)), 32];                 // 擒縱叉支點
+  const LF = 16.5, RP = 4.6, B = [P[0] + LF + RP, 32];            // 叉口距離、衝擊釘半徑、擺輪中心
+  const F = 7, BASE = 20.1;                                       // 擒縱叉擺角 ±7°；鎖定時齒尖在 20.1°
+  const sinB = (f) => deg(Math.asin(clamp(-LF * Math.sin(rad(f)) / RP, -1, 1)));   // 衝擊釘在叉口裡時的擺輪角
+  const PH = [
+    { name: '鎖定', f: F, b: -120, w: 0 },
+    { name: '解鎖', f: 1, b: sinB(1), w: -0.4 },
+    { name: '衝擊', f: -4, b: sinB(-4), w: 3.5 },
+    { name: '落下', f: -F, b: 45, w: 9 },
+  ];
+  const TEXT = [
+    '擒縱輪的一個齒停靠在叉瓦的鎖定面上，整個輪系靜止。擒縱叉靠在限位釘上；擺輪和擒縱叉完全分離，自由擺動，不受輪系干擾。每次擺動的大部分時間都處於這個狀態。',
+    '擺輪擺回中點時，衝擊釘進入擒縱叉的叉口，推動擒縱叉轉過一個小角度，叉瓦隨之滑離齒尖，擒縱輪被放行。這時能量由擺輪流向擒縱叉，是擺輪每次擺動中少數受到阻力的時刻；擒縱輪也被稍微推回。',
+    '放行之後，擒縱輪的齒沿叉瓦的斜面滑過，推動擒縱叉；擒縱叉再經叉口推動衝擊釘，把能量交給擺輪（金線）。從解鎖開始到衝擊結束，擺輪轉過的角度稱為抬升角，OM10 為 50／52°。',
+    '齒離開叉瓦之後，擒縱輪不受阻擋地前進一小段，接著另一個齒落在另一顆叉瓦上，再次鎖定；擒縱叉停靠在另一側的限位釘。擒縱輪每次擺動前進半齒。錶的滴答聲，主要就是齒落在叉瓦上、衝擊釘撞擊叉口的聲音。',
+  ];
+
+  // 擺輪（在最下層）
+  const balG = el('g', { transform: `translate(${f3(B[0])} ${B[1]})` }, svg);
+  const balRot = el('g', {}, balG);
+  {
+    const g = el('g', { class: 'wheel' }, balRot);
+    el('path', { d: circlePath(14.5) + circlePath(13.1), 'fill-rule': 'evenodd', class: 'body' }, g);
+    let d = '';
+    for (let k = 0; k < 3; k++) {
+      const a = k * 120 + 90, ux = Math.cos(rad(a)), uy = Math.sin(rad(a)), nx = -uy * 0.55, ny = ux * 0.55;
+      d += poly([[ux * 2.5 + nx, uy * 2.5 + ny], [ux * 13.2 + nx, uy * 13.2 + ny], [ux * 13.2 - nx, uy * 13.2 - ny], [ux * 2.5 - nx, uy * 2.5 - ny]]);
+    }
+    el('path', { d, class: 'spoke' }, g);
+    const r = el('g', { class: 'steel' }, balRot);
+    el('path', { d: circlePath(5.3), class: 'body' }, r);                     // 衝擊圓盤
+    const notchA = 180, n1 = pt(0, 0, 2.7, notchA - 22), n2 = pt(0, 0, 2.7, notchA + 22);
+    el('path', { d: `M${f3(n2[0])} ${f3(n2[1])}A2.7 2.7 0 1 1 ${f3(n1[0])} ${f3(n1[1])}L-1.9 0Z`, class: 'body' }, r);   // 安全圓盤與缺口
+    el('circle', { r: 0.5, class: 'axle' }, r);
+    el('circle', { cx: -RP, cy: 0, r: 0.6, class: 'ruby' }, balRot);           // 衝擊釘
+  }
+  // 擒縱輪
+  const wG = el('g', { transform: `translate(${E[0]} ${E[1]})` }, svg);
+  const wRot = el('g', {}, wG);
+  makeWheel(wRot, { teeth: T[4].wheel, r: R, depth: DEPTH, spokes: 5, kind: 'escape', cls: 'wheel' });
+  // 限位釘
+  const bank = [1, -1].map((s) => {
+    const a = pt(0, 0, 7, s * F), c = [P[0] + a[0], P[1] + a[1] + s * 1.35];
+    el('circle', { cx: f3(c[0]), cy: f3(c[1]), r: 0.6, class: 'pivot' }, svg);
+    return c;
+  });
+  // 擒縱叉（含兩顆叉瓦），繞 P 轉動
+  const fork = el('g', { class: 'steel' }, svg);
+  const stoneAt = (s) => {                                  // s = 1：出瓦（下）；-1：進瓦（上）
+    const u = [Math.cos(rad(s * HALF)), Math.sin(rad(s * HALF))], n = [-u[1], u[0]];
+    const tip = [E[0] + R * u[0], E[1] + R * u[1]], L = 4.6, W = 0.75;
+    const pts = [[tip[0] + n[0] * W - u[0] * 0.35, tip[1] + n[1] * W - u[1] * 0.35], [tip[0] - n[0] * W, tip[1] - n[1] * W],
+                 [tip[0] - n[0] * W + u[0] * L, tip[1] - n[1] * W + u[1] * L], [tip[0] + n[0] * W + u[0] * L, tip[1] + n[1] * W + u[1] * L]];
+    return { tip, out: [tip[0] + u[0] * (L - 1), tip[1] + u[1] * (L - 1)], pts };
+  };
+  const ST = { 1: stoneAt(1), [-1]: stoneAt(-1) };
+  const px = P[0], py = P[1];
+  el('path', { class: 'body', d: poly([
+    [ST[-1].out[0] - 0.9, ST[-1].out[1] - 1.2], [ST[-1].out[0] + 1.3, ST[-1].out[1] - 0.6], [px + 3, py - 0.85],
+    [px + LF - 1.6, py - 0.75], [px + LF + 1.3, py - 1.55], [px + LF + 1.3, py - 0.75], [px + LF - 0.3, py - 0.75],
+    [px + LF - 0.3, py + 0.75], [px + LF + 1.3, py + 0.75], [px + LF + 1.3, py + 1.55], [px + LF - 1.6, py + 0.75], [px + 3, py + 0.85],
+    [ST[1].out[0] + 1.3, ST[1].out[1] + 0.6], [ST[1].out[0] - 0.9, ST[1].out[1] + 1.2], [px - 1.6, py + 1.6], [px - 1.6, py - 1.6],
+  ]) }, fork);
+  el('path', { d: poly(ST[1].pts), class: 'ruby' }, fork);
+  el('path', { d: poly(ST[-1].pts), class: 'ruby' }, fork);
+  el('circle', { cx: f3(px), cy: py, r: 0.8, class: 'pivot' }, fork);
+  // 金線與接觸點
+  const flow = el('polyline', { class: 'flow' }, svg);
+  const contacts = [0, 1].map(() => el('circle', { r: 1.5, class: 'contact' }, svg));
+  // 標號
+  marker(svg, 1, E[0] - 13.5, E[1] - 16.5);
+  const M2 = [px + 3.6, py - 9.2];
+  const m2 = marker(svg, 2, M2[0], M2[1]);
+  marker(svg, 3, ST[1].out[0] + 3.4, ST[1].out[1] + 2.8);
+  marker(svg, 4, bank[0][0] + 0.6, bank[0][1] + 3.4);
+  marker(svg, 5, B[0] - 3, B[1] + 9.5);
+  marker(svg, 6, B[0] + 10.5, B[1] - 14);
+
+  const world = (p, f) => rotAbout(p, P, f);
+  const pinAt = (b) => [B[0] - RP * Math.cos(rad(b)), B[1] - RP * Math.sin(rad(b))];
+  const pose = (h, i) => { const s = h % 2 ? -1 : 1, ph = PH[i]; return { w: h * 9 + ph.w, f: s * ph.f, b: s * ph.b }; };
+  const st = { h: 0, i: 0, v: pose(0, 0), busy: false };
+
+  function draw(v) {
+    wRot.setAttribute('transform', `rotate(${f3(v.w + BASE)})`);
+    fork.setAttribute('transform', `rotate(${f3(v.f)} ${f3(px)} ${py})`);
+    balRot.setAttribute('transform', `rotate(${f3(v.b)})`);
+    const m = world(M2, v.f);
+    m2.setAttribute('transform', `translate(${f3(m[0])} ${f3(m[1])})`);
+  }
+  function showContacts() {
+    const s = st.h % 2 ? -1 : 1, v = st.v, i = st.i;
+    const lockStone = (sg) => world(ST[sg].tip, v.f);
+    let pts = [], flowPts = null;
+    if (i === 0) pts = [lockStone(s), bank[s === 1 ? 0 : 1]];
+    if (i === 1) pts = [pinAt(v.b), lockStone(s)];
+    if (i === 2) {
+      pts = [lockStone(s), pinAt(v.b)];
+      flowPts = [lockStone(s), world(ST[s].out, v.f), world([px + 3, py], v.f), world([px + LF - 0.3, py], v.f), pinAt(v.b)];
+    }
+    if (i === 3) pts = [lockStone(-s)];
+    contacts.forEach((c, k) => {
+      const p = pts[k];
+      if (p) { c.setAttribute('cx', f3(p[0])); c.setAttribute('cy', f3(p[1])); }
+      c.classList.toggle('show', !!p);
+    });
+    if (flowPts) flow.setAttribute('points', flowPts.map((p) => f3(p[0]) + ',' + f3(p[1])).join(' '));
+    flow.classList.toggle('show', !!flowPts);
+  }
+  function hideContacts() { contacts.forEach((c) => c.classList.remove('show')); flow.classList.remove('show'); }
+
+  const btns = $$('#escapement [data-phase]');
+  function sync() {
+    pressGroup(btns, btns[st.i]);
+    setText($('#esc-title'), `${st.i + 1}　${PH[st.i].name}`);
+    setText($('#esc-text'), TEXT[st.i]);
+    const beats = st.h + (st.i === 3 ? 1 : 0);
+    setText($('#esc-beats'), `${beats} 次`);
+    setText($('#esc-teeth'), `前進 ${trim(Math.max(0, pose(st.h, st.i).w) / 18, 2)} 齒（每次擺動半齒）`);
+  }
+  let cancel = () => {};
+  function goTo(i) {
+    if (i === st.i && !st.busy) return;
+    let h = st.h;
+    if (i <= st.i) h += 1;                                  // 往回選的階段屬於下一次擺動，擒縱輪不倒轉
+    const skip = (h - st.h) * 4 + i - st.i;
+    const target = pose(h, i), from = { ...st.v };
+    st.h = h; st.i = i; st.busy = true;
+    sync(); hideContacts(); cancel();
+    cancel = tween(from, target, skip > 1 ? 900 : 600, (v) => { st.v = v; draw(v); }, () => { st.busy = false; st.v = target; draw(target); showContacts(); });
+  }
+  btns.forEach((b) => b.addEventListener('click', () => goTo(+b.dataset.phase)));
+  $('#esc-next').addEventListener('click', () => goTo((st.i + 1) % 4));
+  draw(st.v); sync(); showContacts();
+  window.__watch.esc = { st, goTo, pose };
+}
+
+/* ═════════════ 能量路徑導覽 ═════════════ */
+function initPath() {
+  const order = ['crown', 'power', 'train', 'escapement'];
+  const links = $$('nav.path a');
+  function setActive(id) {
+    const idx = order.indexOf(id);
+    links.forEach((a) => {
+      const si = order.indexOf(a.dataset.target) + (a.hasAttribute('data-balance') ? 1 : 0);
+      const on = idx >= 0 && (a.dataset.target === id);
+      a.classList.toggle('on', on);
+      if (on) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current');
+      a.parentElement.classList.toggle('lit', idx >= 0 && si <= idx + (id === 'escapement' ? 1 : 0));
+    });
+  }
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) setActive(e.target.id || 'hero'); }), { rootMargin: '-45% 0px -50% 0px' });
+  order.forEach((id) => io.observe(document.getElementById(id)));
+  io.observe($('.hero'));
+}
+
+window.__watch = { DATA, TPH, TOTAL_RATIO, power };
+const vio = new IntersectionObserver((es) => es.forEach((e) => { visible[e.target.id] = e.isIntersecting; }), { rootMargin: '120px 0px' });
+$$('.chapter').forEach((s) => vio.observe(s));
+initCrown();
+initPower();
+initTrain();
+initEscapement();
+initPath();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
